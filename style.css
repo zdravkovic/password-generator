@@ -1,4 +1,14 @@
 :root {
+   --clr-background: hsl(252, 11%, 9%);
+   --clr-main: hsl(249, 8%, 17%);
+   --clr-main-darker: hsl(249, 11%, 13%);
+   --clr-accent: hsl(54, 83%, 66%);
+   --clr-accent-darker: hsl(54, 100%, 74%);
+   --clr-white: hsl(255, 8%, 90%);
+   --clr-outline: hsl(255, 8%, 50%);
+   --clr-gray: hsl(249, 4%, 34%);
+   --clr-checkbox-hover: 54, 83%, 66%;
+   --font-weight: 400;
    --clr-weak: hsl(0, 70%, 52%);
    --clr-medium: hsl(54, 83%, 66%);
    --clr-strong: hsl(145, 74%, 49%);
