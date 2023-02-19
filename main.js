@@ -157,6 +157,10 @@ if (theme === 'dark') {
    changeTheme('light');
    themeDark.classList.remove('active-theme');
    themeLight.classList.add('active-theme');
+} else if (!theme) {
+   changeTheme('dark');
+   themeLight.classList.remove('active-theme');
+   themeDark.classList.add('active-theme');
 }
 
 const copyPassword = async () => {
@@ -192,7 +196,6 @@ generateBtn.addEventListener('click', () => {
       }
       strengthRating(passLength);
    } else {
-      
       passGenerated = false;
       generatedPass.textContent = 'Pa$sW0rD';
       generatedPass.style.color = 'var(--clr-gray)';
