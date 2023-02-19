@@ -331,16 +331,11 @@ body {
 .settings__range:active::-webkit-slider-thumb {
    border: .3rem solid var(--clr-accent);
    background-color: var(--clr-main);
-   outline: .4rem solid hsl(var(--clr-checkbox-hover), 0.2);
 }
+
 .settings__range:active::-moz-range-thumb {
    border: .3rem solid var(--clr-accent);
    background-color: var(--clr-main);
-}
-.settings__range:active::-moz-range-thumb {
-   border: .3rem solid var(--clr-accent);
-   background-color: var(--clr-main);
-   outline: 10px solid hsl(var(--clr-checkbox-hover), 1);
 }
 
 
