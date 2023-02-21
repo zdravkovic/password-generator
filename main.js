@@ -26,6 +26,32 @@ const init = () => {
    generatePasswordHandler();
    // Switch themes using theme buttons
    themesHandler();
+   // Copy password
+   copyButtonHandler();
+};
+
+// Display range input in DOM
+rangeLength.addEventListener('input', (e) => {
+   rangeNumber.textContent = e.target.value;
+});
+
+
+const checkLocalStorage = () => {
+   // On load check which theme is saved in local storage and set styles for that theme
+   if (theme === 'dark') {
+      changeTheme('dark');
+      themeLight.classList.remove('active-theme');
+      themeDark.classList.add('active-theme');
+   } else if (theme === 'light') {
+      changeTheme('light');
+      themeDark.classList.remove('active-theme');
+      themeLight.classList.add('active-theme');
+   } else if (!theme) {
+      // If no theme is saved in local storage, set 'dark' theme as default
+      changeTheme('dark');
+      themeLight.classList.remove('active-theme');
+      themeDark.classList.add('active-theme');
+   }
 };
 
 const themesHandler = () => {
@@ -62,10 +88,62 @@ const themesHandler = () => {
    });
 };
 
-// Display range input in DOM
-rangeLength.addEventListener('input', (e) => {
-   rangeNumber.textContent = e.target.value;
-});
+// Change theme handler
+const changeTheme = theme => {
+   // Save all colors for light and dark themes in objects
+   const colorsLight = {
+   '--clr-background': 'hsl(240, 22%, 96%)',
+   '--clr-main': 'hsl(0, 0%, 100%)',
+   '--clr-main-darker': 'hsl(240, 22%, 90%)',
+   '--clr-accent': 'hsl(226, 59%, 41%)',
+   '--clr-accent-darker': 'hsl(226, 65%, 36%)',
+   '--clr-white': 'hsl(240, 16%, 17%)',
+   '--clr-gray': 'hsl(249, 11%, 73%)',
+   '--clr-outline': 'hsl(223, 30%, 33%)',
+   '--clr-checkbox-hover': '226, 59%, 41%',
+   '--font-weight': '500'
+   };
+
+   const colorsDark = {
+   '--clr-background': 'hsl(252, 11%, 9%)',
+   '--clr-main': 'hsl(249, 8%, 17%)',
+   '--clr-main-darker': 'hsl(249, 11%, 13%)',
+   '--clr-accent': 'hsl(54, 83%, 66%)',
+   '--clr-accent-darker': 'hsl(54, 100%, 74%)',
+   '--clr-white': 'hsl(255, 8%, 90%)',
+   '--clr-outline': 'hsl(255, 8%, 50%)',
+   '--clr-gray': 'hsl(249, 4%, 34%)',
+   '--clr-checkbox-hover': '54, 83%, 66%',
+   '--font-weight': '400'
+   }
+
+   // If function argument is 'dark'
+   if (theme === 'dark') {
+      // Loop through whole dark color object and add them ass :root css variables
+      for(let color in colorsDark) {
+         document.documentElement.style.setProperty(color, colorsDark[color]);
+      }
+   }
+   // If function argument is 'light'
+   if (theme === 'light') {
+      // Loop through whole dark color object and add them ass :root css variables
+      for(let color in colorsLight) {
+         document.documentElement.style.setProperty(color, colorsLight[color]);
+      }
+   }
+};
+
+// Check if least one item (uppercase letter, lowercase letter, number, sybols) is checked
+const checkStatus = () => {
+   // Save all items through array
+   const checkSettings = [upperCase.checked, lowerCase.checked, numbers.checked, symbols.checked];
+   // Filter through all of them and return only the ones that are 'selected'
+   const isOneTrue = checkSettings.filter(el => el === true);
+   // If at least one is 'selected' return true
+   if(isOneTrue[0] === true) {
+      return true;
+   };
+};
 
 // Get random password
 const getRandomPass = (length) => {
@@ -95,6 +173,43 @@ const getRandomPass = (length) => {
    generatedPass.style.color = 'var(--white)';
    // Change text with newly generated string
    generatedPass.textContent = result;
+};
+
+const generatePasswordHandler = () => {
+   // Listen to click on generate button
+   generateBtn.addEventListener('click', () => {
+      // If at least one item (uppercase letter, lowercase letter, number, sybols) is checked
+      if (checkStatus()) {
+         passGenerated = true;
+   
+         // Change tooltip text and opacity to display it
+         tooltip.textContent = `Copy to clipboard`;
+         copyPass.style.opacity = '1';
+   
+         // Save password length as variable
+         const passLength = rangeLength.value;
+         // Get random password with given length
+         getRandomPass(passLength);
+         // Clear last 'strength bars' styles and give them new styles based on new generated password
+         for (let i = 0; i < strengthBars.length ; i++) {
+            strengthBars[i].style.backgroundColor = 'transparent';
+         }
+         strengthRating(passLength);
+   
+      } else {
+         passGenerated = false;
+   
+         // Reset styles to default
+         generatedPass.textContent = 'Pa$sW0rD';
+         generatedPass.style.color = 'var(--clr-gray)';
+         tooltip.textContent = `Nothing to copy`;
+         copyPass.style.opacity = '0.5';
+         for (let i = 0; i < strengthBars.length; i++) {
+            strengthBars[i].style.backgroundColor = 'transparent';
+         }
+         strengthDescription.textContent = '';
+      }
+   });
 };
 
 // Get strength rating based on length and checked items
@@ -150,69 +265,6 @@ const strengthRating = (length) => {
    }
 };
 
-// Change theme handler
-const changeTheme = theme => {
-   // Save all colors for light and dark themes in objects
-   const colorsLight = {
-   '--clr-background': 'hsl(240, 22%, 96%)',
-   '--clr-main': 'hsl(0, 0%, 100%)',
-   '--clr-main-darker': 'hsl(240, 22%, 90%)',
-   '--clr-accent': 'hsl(226, 59%, 41%)',
-   '--clr-accent-darker': 'hsl(226, 65%, 36%)',
-   '--clr-white': 'hsl(240, 16%, 17%)',
-   '--clr-gray': 'hsl(249, 11%, 73%)',
-   '--clr-outline': 'hsl(223, 30%, 33%)',
-   '--clr-checkbox-hover': '226, 59%, 41%',
-   '--font-weight': '500'
-   };
-
-   const colorsDark = {
-   '--clr-background': 'hsl(252, 11%, 9%)',
-   '--clr-main': 'hsl(249, 8%, 17%)',
-   '--clr-main-darker': 'hsl(249, 11%, 13%)',
-   '--clr-accent': 'hsl(54, 83%, 66%)',
-   '--clr-accent-darker': 'hsl(54, 100%, 74%)',
-   '--clr-white': 'hsl(255, 8%, 90%)',
-   '--clr-outline': 'hsl(255, 8%, 50%)',
-   '--clr-gray': 'hsl(249, 4%, 34%)',
-   '--clr-checkbox-hover': '54, 83%, 66%',
-   '--font-weight': '400'
-   }
-
-   // If function argument is 'dark'
-   if (theme === 'dark') {
-      // Loop through whole dark color object and add them ass :root css variables
-      for(let color in colorsDark) {
-         document.documentElement.style.setProperty(color, colorsDark[color]);
-      }
-   }
-   // If function argument is 'light'
-   if (theme === 'light') {
-      // Loop through whole dark color object and add them ass :root css variables
-      for(let color in colorsLight) {
-         document.documentElement.style.setProperty(color, colorsLight[color]);
-      }
-   }
-};
-
-const checkLocalStorage = () => {
-   // On load check which theme is saved in local storage and set styles for that theme
-   if (theme === 'dark') {
-      changeTheme('dark');
-      themeLight.classList.remove('active-theme');
-      themeDark.classList.add('active-theme');
-   } else if (theme === 'light') {
-      changeTheme('light');
-      themeDark.classList.remove('active-theme');
-      themeLight.classList.add('active-theme');
-   } else if (!theme) {
-      // If no theme is saved in local storage, set 'dark' theme as default
-      changeTheme('dark');
-      themeLight.classList.remove('active-theme');
-      themeDark.classList.add('active-theme');
-   }
-};
-
 // Copy password handler
 const copyPassword = async () => {
    try {
@@ -222,69 +274,22 @@ const copyPassword = async () => {
    }
 }
 
-// Listen to click on copy button
-copyPass.addEventListener('click', () => {
-   // If password was generated copy to clipboard and change tooltip text
-   if (passGenerated) {
-      copyPassword();
-      tooltip.textContent = `Password copied`;
-   }
-});
+const copyButtonHandler = () => {
+   // Listen to click on copy button
+   copyPass.addEventListener('click', () => {
+      // If password was generated copy to clipboard and change tooltip text
+      if (passGenerated) {
+         copyPassword();
+         tooltip.textContent = `Password copied`;
+      }
+   });
+};
 
 // If mouse left copy button, reset tooltip text to default
 const resetTooltip = () => {
    if (passGenerated) {
       tooltip.textContent = "Copy to clipboard";
    }
-};
-
-const generatePasswordHandler = () => {
-   // Listen to click on generate button
-   generateBtn.addEventListener('click', () => {
-      // If at least one item (uppercase letter, lowercase letter, number, sybols) is checked
-      if (checkStatus()) {
-         passGenerated = true;
-   
-         // Change tooltip text and opacity to display it
-         tooltip.textContent = `Copy to clipboard`;
-         copyPass.style.opacity = '1';
-   
-         // Save password length as variable
-         const passLength = rangeLength.value;
-         // Get random password with given length
-         getRandomPass(passLength);
-         // Clear last 'strength bars' styles and give them new styles based on new generated password
-         for (let i = 0; i < strengthBars.length ; i++) {
-            strengthBars[i].style.backgroundColor = 'transparent';
-         }
-         strengthRating(passLength);
-   
-      } else {
-         passGenerated = false;
-   
-         // Reset styles to default
-         generatedPass.textContent = 'Pa$sW0rD';
-         generatedPass.style.color = 'var(--clr-gray)';
-         tooltip.textContent = `Nothing to copy`;
-         copyPass.style.opacity = '0.5';
-         for (let i = 0; i < strengthBars.length; i++) {
-            strengthBars[i].style.backgroundColor = 'transparent';
-         }
-         strengthDescription.textContent = '';
-      }
-   });
-};
-
-// Check if least one item (uppercase letter, lowercase letter, number, sybols) is checked
-const checkStatus = () => {
-   // Save all items through array
-   const checkSettings = [upperCase.checked, lowerCase.checked, numbers.checked, symbols.checked];
-   // Filter through all of them and return only the ones that are 'selected'
-   const isOneTrue = checkSettings.filter(el => el === true);
-   // If at least one is 'selected' return true
-   if(isOneTrue[0] === true) {
-      return true;
-   };
 };
 
 // Change range slider color based on input
