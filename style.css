@@ -444,14 +444,34 @@ input[type="checkbox"]:checked + label:after {
 @media only screen and (max-width: 45em) {
    body {
       font-size: .9rem;
+      align-items: flex-start;
    }
    .wrapper {
       width: 90%;
+      padding-top: 1.5rem;
    }
 }
 
 @media only screen and (max-width: 31.25em) {
    .password__generated {
       font-size: 1.4rem;
+   }
+}
+
+@media only screen and (max-width: 25em) {
+   body {
+      font-size: .7rem;
+   }
+
+   .password__generated {
+      font-size: 1.3rem;
+   }
+
+   .settings__include {
+      font-size: 1rem;
+   }
+
+   .settings__chars-length {
+      font-size: 1.7rem;
    }
 }
